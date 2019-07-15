@@ -1,4 +1,4 @@
-# Usage: locust -f locustfileLoad-cr2.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
+# Usage: locust -f locustfileLoad-dng.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
 
 token = None
 username = 'natalia@zenfolio.com'
@@ -12,8 +12,8 @@ dimension_url = '/media/v1/photo/dimensions'
 min_wait = 1000
 max_wait = 5000
 
-image_file = 'C:\\work\\Locust\\photos\\IMG_5705.CR2'
-image_format = 'image/cr2'
+image_file = 'C:\\work\\Locust\\photos\\IMG_5704.dng'
+image_format = 'image/dng'
 
 # test deployment
 apim_key = 'cbecfad8f6e7406e833e0bc77a69ca27'
