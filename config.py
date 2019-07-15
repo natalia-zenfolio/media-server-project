@@ -1,4 +1,4 @@
-# Usage: locust -f locustfileLoad-dng.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
+# Usage: locust -f locustfileLoad-heif.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
 
 token = None
 username = 'natalia@zenfolio.com'
@@ -12,7 +12,7 @@ dimension_url = '/media/v1/photo/dimensions'
 min_wait = 1000
 max_wait = 5000
 
-image_file = 'C:\\work\\Locust\\photos\\IMG_5704.dng'
+image_file = 'C:\\work\\Locust\\photos\\20190630_185504.heic'
 image_format = 'image/dng'
 
 # test deployment
