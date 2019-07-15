@@ -1,0 +1,5 @@
+"Method","Name","# requests","# failures","Median response time","Average response time","Min response time","Max response time","Average Content Size","Requests/s"
+"POST","/api/identities/v1/login",1,0,1100,1114,1114,1114,970,0.02
+"POST","/api/media/v1/photo",1,0,21000,21162,21162,21162,50,0.02
+"GET","/media/v1/photo",6,0,1700,2986,1653,9361,14283430,0.12
+"None","Total",8,0,1700,5024,1114,21162,10712700,0.16
