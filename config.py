@@ -1,5 +1,5 @@
-# Usage: locust -f locustfileLoad-heif.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
-# heif conf file
+# Usage: locust -f locustfileLoad-cr2.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
+# cr2 conf file
 token = None
 username = 'natalia@zenfolio.com'
 password = 'Nataliaminsk2019'
@@ -12,8 +12,8 @@ dimension_url = '/media/v1/photo/dimensions'
 min_wait = 1000
 max_wait = 5000
 
-image_file = 'C:\\work\\Locust\\photos\\20190630_185504.heic'
-image_format = 'image/dng'
+image_file = 'C:\\work\\Locust\\photos\\IMG_5705.CR2'
+image_format = 'image/cr2'
 
 # test deployment
 apim_key = 'cbecfad8f6e7406e833e0bc77a69ca27'
