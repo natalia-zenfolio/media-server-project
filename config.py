@@ -1,8 +1,8 @@
-# Usage: locust -f locustfileLoad-gif.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
-# gif conf file
+# Usage: locust -f locustfile-exif.py --no-web -c 1 -r 1 -t 55s --only-summary --csv=output
+
 token = None
-username = 'natalia@zenfolio.com'
-password = 'Nataliaminsk2019'
+username = 'stanley@zenfolio.com'
+password = 'welcomE1234'
 login_url = '/identities/v1/login'
 upload_url = '/media/v1/photo'
 query_url = '/media/v1/photo'
@@ -12,28 +12,21 @@ dimension_url = '/media/v1/photo/dimensions'
 min_wait = 1000
 max_wait = 5000
 
-image_file_gif = 'C:\\work\\Locust\\photos\\p55709780-r0.gif'
-image_format_gif = 'image/gif'
-
-image_file_heic = 'C:\\work\\Locust\\photos\\20190630_185504.heic'
-image_format_heic = 'image/heic'
-
-image_file_cr2 = 'C:\\work\\Locust\\photos\\IMG_5705.CR2'
-image_format_cr2 = 'image/cr2'
-
-image_file_dng = 'C:\\work\\Locust\\photos\\IMG_5704.dng'
-image_format_dng = 'image/dng'
+image_file = 'C:\\work\\Locust\\photos\\exif.jpg'
+image_file_dwnld = 'C:\\work\\Locust\\photos\\exif_dwnld.jpg'
+image_format = 'image/jpeg'
 
 # test deployment
-apim_key = 'cbecfad8f6e7406e833e0bc77a69ca27'
-host = 'https://test.zenfolio.work/api'
+#apim_key = 'cbecfad8f6e7406e833e0bc77a69ca27'
+#host = 'https://test.zenfolio.work/api'
 
 # perf deployment
-#apim_key = 'af49f4fd45b14b0293d4be769ef47b14'
-#host = 'https://performance-tests.zenfolio.work/api'
-#host = 'https://zf-bnl-perf-svcfab.centralus.cloudapp.azure.com'
+apim_key = 'af49f4fd45b14b0293d4be769ef47b14'
+host = 'https://performance-tests.photobooker.com/api'
+
 
 # local deployment
 #apim_key = '44dc7c91f91d427688aadb8cacbe4a65'
 #host = 'https://booking-listing.com/api'
 #host = 'http://localhost:19081/api'
+
