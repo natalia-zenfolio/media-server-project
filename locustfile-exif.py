@@ -1,11 +1,12 @@
+# Usage: locust -f locustfile-exif.py --no-web -c 1 -r 1 -t 1m --only-summary --csv=output
+
 import config
 import sys
 import requests
 import os
 import json
 import random
-import exifread
-# import locust.stats
+from PIL import Image, ExifTags
 from locust import HttpLocust, task, seq_task, TaskSet, TaskSequence, exception
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from requests_toolbelt.utils import dump
@@ -19,9 +20,7 @@ class MyTaskSet(TaskSet):
     def on_start(self):
         config.token = self.login()
         global photoId
-        global exifdata_orig
         photoId = self.upload(config.image_file, config.image_format)
-        exifdata_orig = self.get_exif(config.image_file)
 
     def login(self):
         # login in and get access token
@@ -57,10 +56,7 @@ class MyTaskSet(TaskSet):
         return response.json()['photoId']
 
     def get_exif(self, image_file):
-        f = open(image_file, 'rb')
-        exifdata_orig = exifread.process_file(f)
-        f.close()
-        return exifdata_orig
+        return dict(Image.open(image_file).getexif())
 
     def check_response(self, response):
         if response.status_code != 200:
@@ -68,30 +64,24 @@ class MyTaskSet(TaskSet):
             print(data.decode('utf-8'))
             sys.exit()
 
-    def compare_exif(self, d1, d2):
+    def compare_exif(self, d1, d2, display):
         assert (len(d1) == len(d2)), 'Expected %d tags, got %d' % (len(d1), len(d2))
-        print('Has {} EXIF tags ...'.format(len(d1)))
+        print('Both have {} EXIF tags ...'.format(len(d1)))
 
-        d1_keys = set(d1.keys())
-        d2_keys = set(d2.keys())
-        print(d1_keys)
-        intersect_keys = d1_keys.intersection(d2_keys)
-        assert (d1_keys == intersect_keys), 'EXIF tags mismatch'
+        assert (d1.keys() == d2.keys()), 'EXIF tags mismatch'
 
-        # Up to this point, the 2 Exif dictionaries have identical tags. However, their values don't necessarily match.
-        # In fact, some tags are expected to be different. e.g. 'Image DateTime', 'EXIF ImageExifImageWidth', 'EXIF ExifImageLength'.
-        # So, modify this routine to check only the desired tags listed in the ticket.
-
-        # Desired EXIF tags to compare
-        tags = ['Image Make', 'Image Model', 'EXIF ExifImageWidth', 'EXIF ExifImageLength', 'EXIF ExposureTime',
-                'EXIF FNumber', 'EXIF ISOSpeedRatings', 'EXIF ApertureValue', 'MakerNote RecordMode',
-                'Image Orientation']
-        ###for tag in tags:
-        ###    print('{}: {} == {}'.format(tag, d1[tag], d2[tag]))
+        for k in d1.keys():
+            assert (d1[k] == d2[k]), '{}: {} == {}'.format(k, d1[k], d2[k])
+            if display:
+                if ExifTags.TAGS.get(k, k) == 'GPSInfo':
+                    for t in d1[k]:
+                        print('{}: {} == {}'.format(ExifTags.GPSTAGS.get(t, t), d1[k][t], d2[k][t]))
+                else:
+                    print('{}: {} == {}'.format(ExifTags.TAGS.get(k, k), d1[k], d2[k]))
 
     @seq_task(1)
     @task(1)
-    def query_image(self):
+    def pull_meta(self):
 
         auth = 'Bearer ' + config.token
         header = {
@@ -99,20 +89,12 @@ class MyTaskSet(TaskSet):
             'Ocp-Apim-Subscription-Key': config.apim_key,
             'Content-Type': 'application/json'
         }
-        param = {
-            #'sizeTypeCode': '200x133'  # use "resize" to ensure resized image still has EXIF
-        }
-        print('Querying ' + photoId + ' ...')
+        print('Querying EXIF data from ' + photoId + ' ...')
 
-        with self.client.get(url=config.query_url + '/' + photoId, params=param, headers=header,
-                             name=config.query_url) as response:
+        with self.client.get(url=config.photoinfo_url + '/' + photoId, headers=header) as response:
             self.check_response(response)
 
-            with open(config.image_file_dwnld, 'wb') as downloaded_image:
-                for chunk in response.iter_content(chunk_size=128):
-                    downloaded_image.write(chunk)
-
-        self.compare_exif(exifdata_orig, self.get_exif(config.image_file_dwnld))
+        self.compare_exif(self.get_exif(config.image_file), self.response, True)
 
         raise StopLocust()
 
