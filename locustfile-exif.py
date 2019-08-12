@@ -94,7 +94,9 @@ class MyTaskSet(TaskSet):
         with self.client.get(url=config.photoinfo_url + '/' + photoId, headers=header) as response:
             self.check_response(response)
 
-        self.compare_exif(self.get_exif(config.image_file), self.response, True)
+        print(response.json())
+        getphotoinfo = dict(response.json())
+        self.compare_exif(self.get_exif(config.image_file), getphotoinfo, True)
 
         raise StopLocust()
 
